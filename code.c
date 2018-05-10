@@ -139,6 +139,28 @@ char* input()
 	}
 	return rtn;
 }
+char* input2() {
+	const static char* end = "\n";
+	char tmp[10];
+	char* rtn = NULL;
+
+	while (fgets(tmp, 10, stdin), 1) {
+		if (!rtn) {
+			rtn = (char*)malloc(strlen(tmp) + 1);
+			strcpy(rtn, tmp);
+		}
+		else{
+			rtn = (char*)realloc(rtn, strlen(rtn) + strlen(tmp) + 1);
+			strcat(rtn, tmp);
+		}
+		if (strstr(rtn, end) != NULL){
+			char* endstr = strstr(rtn, end);
+			*endstr = '\0';
+			break;
+		}
+	}
+	return rtn;
+}
 
 int main(void) {
 	char *m;
