@@ -31,13 +31,13 @@ void initHeader(Header header[]) { //헤더 데이터 초기화
 }
 
 void initList(List *plist, Header header[]) {
-	initHeader(header); 
+	initHeader(header);
 	plist->arrp = header;
 	plist->head = NULL;
-	
+
 }
 
-Header *findHeader(List *plist,char* str) {
+Header *findHeader(List *plist, char* str) {
 	int i = 0;
 	for (i = 0; i < 53; i++) {
 		if (plist->arrp[i].data == str[0]) {
@@ -48,7 +48,7 @@ Header *findHeader(List *plist,char* str) {
 	return NULL;
 }
 
-Node* new_node(char *str,int val) {
+Node* new_node(char *str, int val) {
 
 	Node *p = (Node*)malloc(sizeof(Node));
 	p->pkey = str;
@@ -57,15 +57,18 @@ Node* new_node(char *str,int val) {
 	return p;
 }
 
-void addNode(List *plist,char *str, int val) {
+void addNode(List *plist, char *str, int val) {
 	Node* p = new_node(str, val);
 	Header *hp = findHeader(plist, str);
+	if (existNode(plist, str) == 1) { //중복일경우
+		return;
+	}
 	if (hp->next == NULL) { //헤더 다음 첫번째노드를 추가할때
 		hp->next = p;
 	}
 	else { //2번쨰 노드부터
 		plist->head = hp->next;
-		while (plist->head->next!=NULL)
+		while (plist->head->next != NULL)
 		{
 			plist->head = plist->head->next;
 		}
@@ -75,7 +78,7 @@ void addNode(List *plist,char *str, int val) {
 
 void searchNode(List *plist, char *str) { //검색
 	Header *hp = findHeader(plist, str);
-	if (hp->next==NULL) { //하나도 없을경우
+	if (hp->next == NULL) { //하나도 없을경우
 		printf("\n");
 		return;
 	}
@@ -139,6 +142,8 @@ char* input()
 	}
 	return rtn;
 }
+
+
 char* input2() {
 	const static char* end = "\n";
 	char tmp[10];
@@ -162,6 +167,9 @@ char* input2() {
 	return rtn;
 }
 
+
+
+
 int main(void) {
 	char *m;
 	int i = 0;
@@ -170,22 +178,23 @@ int main(void) {
 	char *test3 = "ball";
 	char *test4 = "count";
 	char *test5 = "cccd";
-	
+
 	List list;
-	
+
 	printf("input string : ");
-	m = input();
+	m = input2();
 	printf("%s \n", m);
 
 	free(m);
-	
+
 	Header header[53];
 
-	initList(&list,header);
+	initList(&list, header);
 	addNode(&list, test, 3);
 	addNode(&list, test2, 5);
 	addNode(&list, test4, 2);
-	
+	addNode(&list, test4, 2);
+
 	searchNode(&list, test4);
 	printf("존재여부 :%d \n", existNode(&list, test4));
 	searchNode(&list, test3);
@@ -198,9 +207,9 @@ int main(void) {
 
 	/*
 	for (i = 0; i < 53; i++) {
-		printf("%d 번째 헤더 : %c \n",i,header[i].data );
+	printf("%d 번째 헤더 : %c \n",i,header[i].data );
 	}
 	*/
-	
+
 	return 0;
 }
